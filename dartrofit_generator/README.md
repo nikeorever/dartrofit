@@ -1,4 +1,7 @@
 # Dartrofit_generator for dartrofit
+
+[![pub package](https://img.shields.io/badge/pub-1.0.0-blueviolet.svg)](https://pub.dev/packages/dartrofit_generator)
+
 The code generator for `Dartrofit`.
 
 First, dev depend on it
