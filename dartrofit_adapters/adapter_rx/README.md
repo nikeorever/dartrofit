@@ -1,4 +1,7 @@
 # Dartrofit_adapter_rx for dartrofit
+
+[![pub package](https://img.shields.io/badge/pub-1.0.0-blueviolet.svg)](https://pub.dev/packages/dartrofit_adapter_rx)
+
 The Rx support for dartrofit
 
 First, depend on it
