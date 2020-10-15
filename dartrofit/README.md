@@ -1,5 +1,7 @@
 # Dartrofit for Dart and Flutter
 
+[![pub package](https://img.shields.io/badge/pub-1.0.0-blueviolet.svg)](https://pub.dev/packages/dartrofit)
+
 ## Introduction
 `Dartrofit` turns your HTTP API into a Dart "interface"(abstract class).
 ```dart
