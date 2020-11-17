@@ -5,7 +5,6 @@ import 'package:dartrofit/src/call.dart';
 import 'package:dartrofit/src/call_adapter.dart';
 import 'package:dartrofit/src/response.dart';
 import 'package:dartrofit/src/type_value.dart';
-import 'package:wedzera/core.dart';
 
 class BuiltInAdapterFactory extends CallAdapterFactory {
   @override
@@ -39,6 +38,16 @@ class BuiltInAdapterFactory extends CallAdapterFactory {
         }
         return IdentityCallAdapter<R>() as CallAdapter<R, T>;
       }
+
+      if (_isDartAsyncStream(returnType)) {
+        final upperBoundAtIndex0 = returnType.upperBoundAtIndex0;
+
+        if (TypeValue.isDartrofitResponse(upperBoundAtIndex0)) {
+          return StreamCallAdapter<R>() as CallAdapter<R, T>;
+        } else {
+          return StreamBodyCallAdapter<R>() as CallAdapter<R, T>;
+        }
+      }
     }
     return null;
   }
@@ -55,6 +64,11 @@ class BuiltInAdapterFactory extends CallAdapterFactory {
 
   static bool _isDartrofitCall(ParameterizedTypeValue returnType) {
     return returnType.name == 'Call' && returnType.libraryName == 'dartrofit';
+  }
+
+  static bool _isDartAsyncStream(ParameterizedTypeValue returnType) {
+    return returnType.name == 'Stream' &&
+        returnType.libraryName == 'dart.async';
   }
 }
 
@@ -129,5 +143,37 @@ class IdentityCallAdapter<R> implements CallAdapter<R, Call<R>> {
   @override
   Call<R> adapt(Call<R> call) {
     return call.clone();
+  }
+}
+
+class StreamCallAdapter<R> implements CallAdapter<R, Stream<Response<R>>> {
+  @override
+  Stream<Response<R>> adapt(Call<R> call) {
+    call = call.clone();
+
+    final completer = Completer<Response<R>>();
+    call.enqueue((call, response) {
+      completer.complete(response);
+    }, (call, errorAndStacktrace) {
+      completer.completeError(
+          errorAndStacktrace.error, errorAndStacktrace.stackTrace);
+    });
+    return completer.future.asStream();
+  }
+}
+
+class StreamBodyCallAdapter<R> implements CallAdapter<R, Stream<R>> {
+  @override
+  Stream<R> adapt(Call<R> call) {
+    call = call.clone();
+
+    final completer = Completer<R>();
+    call.enqueue((call, response) {
+      completer.complete(response.body);
+    }, (call, errorAndStacktrace) {
+      completer.completeError(
+          errorAndStacktrace.error, errorAndStacktrace.stackTrace);
+    });
+    return completer.future.asStream();
   }
 }

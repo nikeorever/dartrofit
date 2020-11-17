@@ -2,12 +2,11 @@ import 'dart:io';
 import 'package:http_server/http_server.dart';
 import 'package:wedzera/core.dart';
 import 'package:quiver/pattern.dart';
-import 'package:quiver/check.dart';
 
 class HttpMockServer {
   HttpMockServer({this.address = '0.0.0.0', this.port = 7777}) {
-    checkArgument(matchesFull(RegExp(_ipv4Pattern), address),
-        message: '$address is not standard ipv4 address');
+    requireNotNull(matchesFull(RegExp(_ipv4Pattern), address),
+        lazyMessage: () => '$address is not standard ipv4 address');
   }
 
   final String address;

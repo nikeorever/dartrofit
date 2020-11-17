@@ -1,3 +1,5 @@
+import 'package:wedzera/core.dart';
+
 class TypeValue {
   final String libraryName;
   final String name;
@@ -11,17 +13,28 @@ class TypeValue {
   }
 
   static bool isDartrofitResponse(TypeValue type) {
-    if (type == null) {
-      throw ArgumentError.notNull('typevalue is null');
-    }
+    requireNotNull(type, lazyMessage: () => 'typeValue is null');
     return type.name == 'Response' && type.libraryName == 'dartrofit';
   }
 
   static bool isQuiverOptional(TypeValue type) {
-    if (type == null) {
-      throw ArgumentError.notNull('typevalue is null');
-    }
-    return type.name == 'Optional' && type.libraryName == 'quiver.core';
+    requireNotNull(type, lazyMessage: () => 'typeValue is null');
+    return type.name == 'Optional' && type.libraryName == 'quiver';
+  }
+
+  static bool isDartrofitResponseBody(TypeValue type) {
+    requireNotNull(type, lazyMessage: () => 'typeValue is null');
+    return type.name == 'ResponseBody' && type.libraryName == 'dartrofit';
+  }
+
+  static bool isDartCoreMap(TypeValue type) {
+    requireNotNull(type, lazyMessage: () => 'typeValue is null');
+    return type.name == 'Map' && type.libraryName == 'dart.core';
+  }
+
+  static bool isDartCoreList(TypeValue type) {
+    requireNotNull(type, lazyMessage: () => 'typeValue is null');
+    return type.name == 'List' && type.libraryName == 'dart.core';
   }
 }
 

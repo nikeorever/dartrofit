@@ -10,10 +10,10 @@ import 'package:quiver/check.dart';
 
 class Dartrofit {
   final Uri baseUrl;
-  final List<ConverterFactory> converterFactories = <ConverterFactory>[
-    BuiltInConvertFactory()
+  final List<ConverterFactory> _converterFactories = <ConverterFactory>[
+    BuiltInConvertFactory() // must be last
   ];
-  final List<CallAdapterFactory> adapterFactories = <CallAdapterFactory>[
+  final List<CallAdapterFactory> _adapterFactories = <CallAdapterFactory>[
     BuiltInAdapterFactory()
   ];
 
@@ -26,6 +26,15 @@ class Dartrofit {
       throw ArgumentError('baseUrl must end in /: $baseUrl');
     }
     return baseUrl;
+  }
+
+  void addConverterFactory(ConverterFactory factory) {
+    // BuiltInConvertFactory must be last.
+    _converterFactories.insert(0, factory);
+  }
+
+  void addCallAdapterFactory(CallAdapterFactory factory) {
+    _adapterFactories.add(factory);
   }
 
   HttpServiceMethod<ResponseT, ReturnT> parseAnnotation<ResponseT, ReturnT>(
@@ -51,7 +60,7 @@ class Dartrofit {
 
   CallAdapter<ResponseT, ReturnT> _nextAdapter<ResponseT, ReturnT>(
       TypeValue returnType) {
-    for (var factory in adapterFactories) {
+    for (var factory in _adapterFactories) {
       final adapter = factory.get<ResponseT, ReturnT>(returnType);
       if (adapter != null) {
         return adapter;
@@ -72,7 +81,7 @@ class Dartrofit {
       dataType = upperBoundAtIndex0;
     }
 
-    for (var factory in converterFactories) {
+    for (var factory in _converterFactories) {
       final converter = factory.responseBodyConverter<ResponseT>(dataType);
       if (converter != null) {
         return converter;
@@ -82,7 +91,7 @@ class Dartrofit {
   }
 
   Converter<Object, RequestBody> requestBodyConverter(Object value) {
-    for (var factory in converterFactories) {
+    for (var factory in _converterFactories) {
       final converter = factory.requestBodyConverter(value);
       if (converter != null) {
         return converter;

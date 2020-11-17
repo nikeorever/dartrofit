@@ -142,6 +142,11 @@ Future<Response<Map<String, dynamic>>> getBooks(@Query('category') int category)
 @GET('books/v1/getBooks')
 CancelableOperation<Response<Map<String, dynamic>>> getBooks(@Query('category') int category); 
 ```
+- `Stream` (built-in)
+```dart
+@GET('books/v1/getBooks')
+Stream<ResponseBody> getBooks(@Query('category') int category); 
+```
 - `Subject` ([rxdart](https://pub.dev/packages/rxdart) support, depend on `dartrofit_adapter_rx: latest version`)
 ```dart
 @GET('books/v1/getBooks')

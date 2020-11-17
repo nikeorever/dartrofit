@@ -8,7 +8,6 @@ import 'package:dartrofit/src/annotations/querys.dart';
 import 'package:dartrofit/src/annotations/url.dart';
 import 'package:dartrofit/src/request_builder.dart';
 import 'package:http/http.dart';
-import 'package:quiver/check.dart';
 import 'package:quiver/strings.dart';
 import 'package:wedzera/core.dart';
 
@@ -38,19 +37,14 @@ class QueryMapHandler extends ParameterHandler<Map<String, dynamic>> {
 
   @override
   void apply(RequestBuilder builder, Map<String, dynamic> value) {
-    if (value == null) {
-      throw ArgumentError('Query map was null');
-    }
+    requireNotNull(value, lazyMessage: () => 'Query map was null');
 
     value.forEach((entryKey, entryValue) {
-      if (entryKey == null) {
-        throw ArgumentError('Query map contained null key');
-      }
-
-      if (entryValue == null) {
-        throw ArgumentError(
-            "Query map contained null value for key '$entryKey'");
-      }
+      requireNotNull(entryKey,
+          lazyMessage: () => 'Query map contained null key');
+      requireNotNull(entryValue,
+          lazyMessage: () =>
+              "Query map contained null value for key '$entryKey'");
 
       builder.addQueryParam(entryKey, entryValue.toString(), encoded);
     });
@@ -61,7 +55,7 @@ class QueryMapHandler extends ParameterHandler<Map<String, dynamic>> {
 class RelativeUrlHandler extends ParameterHandler<Object> {
   @override
   void apply(RequestBuilder builder, Object value) {
-    checkNotNull(value, message: '@Url parameter is null');
+    requireNotNull(value, lazyMessage: () => '@Url parameter is null');
     builder.setRelativeUrl(value);
   }
 }
@@ -74,8 +68,8 @@ class PathHandler extends ParameterHandler<Object> {
 
   @override
   void apply(RequestBuilder builder, Object value) {
-    checkNotNull(value,
-        message: '@Path parameter "$name" value must not be null.');
+    requireNotNull(value,
+        lazyMessage: () => '@Path parameter "$name" value must not be null.');
     builder.addPathParam(name, value.toString(), encoded);
   }
 }
@@ -88,7 +82,8 @@ class BodyHandler extends ParameterHandler<Object> {
 
   @override
   void apply(RequestBuilder builder, Object value) {
-    checkNotNull(value, message: 'Body parameter value must not be null.');
+    requireNotNull(value,
+        lazyMessage: () => 'Body parameter value must not be null.');
 
     builder.body = runCatching<RequestBody>(() {
       return converter.convert(value);
@@ -120,11 +115,11 @@ class FieldMapHandler extends ParameterHandler<Map<String, dynamic>> {
 
   @override
   void apply(RequestBuilder builder, Map<String, dynamic> value) {
-    checkNotNull(value, message: 'Field map was null.');
+    requireNotNull(value, lazyMessage: () => 'Field map was null.');
     value.forEach((key, value) {
-      checkNotNull(key, message: 'Field map contained null key.');
-      checkNotNull(value,
-          message: 'Field map contained null value for key $key.');
+      requireNotNull(key, lazyMessage: () => 'Field map contained null key.');
+      requireNotNull(value,
+          lazyMessage: () => 'Field map contained null value for key $key.');
       builder.addFormField(key, value.toString(), encoded);
     });
   }

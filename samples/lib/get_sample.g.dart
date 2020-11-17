@@ -18,7 +18,7 @@ class _$GETApi extends GETApi {
   final Dartrofit dartrofit;
 
   @override
-  Future<Response<Map<String, dynamic>>> getBooksFuture(
+  Future<Response<ResponseBody>> getBooksFuture(
       String param1,
       int param2,
       Map<String, dynamic> paramMap1,
@@ -26,15 +26,12 @@ class _$GETApi extends GETApi {
       String valueOfHeader3,
       int valueOfHeader4) {
     final ptv0 = ParameterizedTypeValue(
-        'dart.async', 'Future', 'Future<Response<Map<String, dynamic>>>');
+        'dart.async', 'Future', 'Future<Response<ResponseBody>>');
     final ptv1 = ParameterizedTypeValue(
-        'dartrofit', 'Response', 'Response<Map<String, dynamic>>');
+        'dartrofit', 'Response', 'Response<ResponseBody>');
     ptv0.upperBoundAtIndex0 = ptv1;
-    final ptv2 =
-        ParameterizedTypeValue('dart.core', 'Map', 'Map<String, dynamic>');
-    ptv1.upperBoundAtIndex0 = ptv2;
-    final tv3 = TypeValue('dart.core', 'String', 'String');
-    ptv2.upperBoundAtIndex0 = tv3;
+    final tv2 = TypeValue('dartrofit', 'ResponseBody', 'ResponseBody');
+    ptv1.upperBoundAtIndex0 = tv2;
 
     final annotationInfo = AnnotationInfo((b) => b
       ..httpMethod = 'GET'
@@ -63,8 +60,8 @@ class _$GETApi extends GETApi {
     ];
 
     return dartrofit
-        .parseAnnotation<Map<String, dynamic>,
-            Future<Response<Map<String, dynamic>>>>(annotationInfo)
+        .parseAnnotation<ResponseBody, Future<Response<ResponseBody>>>(
+            annotationInfo)
         .invoke(args);
   }
 }
