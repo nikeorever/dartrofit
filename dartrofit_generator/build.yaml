@@ -1,9 +1,17 @@
 builders:
-  # name of the builder
+  # web_api_builder has been deprecated, use service_builder instead.
   web_api_builder:
     import: "package:dartrofit_generator/builder.dart"
     builder_factories: ["webApiBuilder"]
     build_extensions: {".dart": ["web_api.g.part"]}
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
+
+  service_builder:
+    import: "package:dartrofit_generator/builder.dart"
+    builder_factories: ["serviceBuilder"]
+    build_extensions: {".dart": ["service.g.part"]}
     auto_apply: dependents
     build_to: cache
     applies_builders: ["source_gen|combining_builder"]

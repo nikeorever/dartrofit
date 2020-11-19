@@ -7,6 +7,7 @@ export 'src/annotations/multipart.dart';
 export 'src/annotations/path.dart';
 export 'src/annotations/querys.dart';
 export 'src/annotations/request_methods.dart';
+export 'src/annotations/service.dart';
 export 'src/annotations/url.dart';
 export 'src/annotations/web_api.dart';
 export 'src/builtin_calladapters.dart';

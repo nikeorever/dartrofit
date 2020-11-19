@@ -3,7 +3,7 @@
 part of 'my_service.dart';
 
 // **************************************************************************
-// WebApiGenerator
+// ServiceGenerator
 // **************************************************************************
 
 class _$MyService extends MyService {

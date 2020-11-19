@@ -3,7 +3,7 @@ import 'package:rxdart/rxdart.dart' as rx;
 
 part 'my_service.g.dart';
 
-@webApi
+@service
 abstract class MyService {
   MyService._();
 

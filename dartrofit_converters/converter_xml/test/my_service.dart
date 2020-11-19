@@ -3,7 +3,7 @@ import 'package:xml/xml.dart' as xml;
 
 part 'my_service.g.dart';
 
-@WebApi()
+@service
 abstract class MyService {
   MyService._();
 

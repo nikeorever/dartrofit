@@ -12,22 +12,21 @@ import 'package:quiver/iterables.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:dart_style/dart_style.dart';
 
-part 'webapi_source_class.g.dart';
+part 'service_source_class.g.dart';
 
 const String _importWithSingleQuotes =
     "import 'package:dartrofit/dartrofit.dart'";
 const String _importWithDoubleQuotes =
     'import "package:dartrofit/dartrofit.dart"';
 
-@Deprecated('use ServiceSourceClass instead.')
-abstract class WebApiSourceClass
-    implements Built<WebApiSourceClass, WebApiSourceClassBuilder> {
+abstract class ServiceSourceClass
+    implements Built<ServiceSourceClass, ServiceSourceClassBuilder> {
   ClassElement get element;
 
-  factory WebApiSourceClass(ClassElement element) =>
-      _$WebApiSourceClass._(element: element);
+  factory ServiceSourceClass(ClassElement element) =>
+      _$ServiceSourceClass._(element: element);
 
-  WebApiSourceClass._();
+  ServiceSourceClass._();
 
   @memoized
   ParsedLibraryResult get parsedLibrary =>
