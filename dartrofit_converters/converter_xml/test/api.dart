@@ -3,7 +3,7 @@ import 'package:xml/xml.dart' as xml;
 
 part 'api.g.dart';
 
-@webApi
+@WebApi()
 abstract class Api {
   Api._();
 
@@ -12,6 +12,9 @@ abstract class Api {
   @GET('bookshelf')
   Future<xml.XmlDocument> getBookshelf();
 
-  @POST('bookshelf')
-  Future<Response<xml.XmlDocument>> postBookshelf(@Body() xml.XmlNode node);
+  @GET('invalidBookshelf')
+  Future<xml.XmlDocument> getInvalidBookshelf();
+
+  @POST('postBookshelf')
+  Future<Response<Map<String, Object>>> postBookshelf(@Body() xml.XmlNode node);
 }

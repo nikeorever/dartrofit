@@ -18,7 +18,7 @@ class _$Api extends Api {
   final Dartrofit dartrofit;
 
   @override
-  Future<Optional<ResponseBody>> postXml1(xml.XmlNode body) {
+  Future<Optional<ResponseBody>> postXml1(XmlNode body) {
     final ptv0 = ParameterizedTypeValue(
         'dart.async', 'Future', 'Future<Optional<ResponseBody>>');
     final ptv1 =
@@ -45,7 +45,7 @@ class _$Api extends Api {
   }
 
   @override
-  Future<Optional<xml.XmlDocument>> postXml2(xml.XmlNode body) {
+  Future<Optional<XmlDocument>> postXml2(XmlNode body) {
     final ptv0 = ParameterizedTypeValue(
         'dart.async', 'Future', 'Future<Optional<XmlDocument>>');
     final ptv1 =
@@ -56,7 +56,7 @@ class _$Api extends Api {
 
     final annotationInfo = AnnotationInfo((b) => b
       ..httpMethod = 'POST'
-      ..relativeUrl = 'books/v1/postXml'
+      ..relativeUrl = 'books/v1/postInvalidXml'
       ..isMultipart = false
       ..isFormEncoded = false
       ..parameterHandlers
@@ -66,13 +66,13 @@ class _$Api extends Api {
     final args = [body];
 
     return dartrofit
-        .parseAnnotation<Optional<xml.XmlDocument>,
-            Future<Optional<xml.XmlDocument>>>(annotationInfo)
+        .parseAnnotation<Optional<XmlDocument>, Future<Optional<XmlDocument>>>(
+            annotationInfo)
         .invoke(args);
   }
 
   @override
-  Future<xml.XmlDocument> postXml3(xml.XmlNode body) {
+  Future<XmlDocument> postXml3(XmlNode body) {
     final ptv0 =
         ParameterizedTypeValue('dart.async', 'Future', 'Future<XmlDocument>');
     final tv1 = TypeValue('xml', 'XmlDocument', 'XmlDocument');
@@ -90,8 +90,7 @@ class _$Api extends Api {
     final args = [body];
 
     return dartrofit
-        .parseAnnotation<xml.XmlDocument, Future<xml.XmlDocument>>(
-            annotationInfo)
+        .parseAnnotation<XmlDocument, Future<XmlDocument>>(annotationInfo)
         .invoke(args);
   }
 }

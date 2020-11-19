@@ -176,7 +176,7 @@ class ClassVisitor extends SimpleElementVisitor {
           ..parameterHandlers.addAll([$parameterHandlersStringBuffer])
           ..returnType = ptv0);
         
-        final args = [$parameterNamesStringBuffer];
+        final args = <Object>[$parameterNamesStringBuffer];
           
         return dartrofit.parseAnnotation<$dataTypeFullName, $returnTypeFullName>(annotationInfo).invoke(args);
         ''';
@@ -226,7 +226,7 @@ class ClassVisitor extends SimpleElementVisitor {
           ..parameterHandlers.addAll([$parameterHandlersStringBuffer])
           ..returnType = ptv0);
         
-        final args = [$parameterNamesStringBuffer];
+        final args = <Object>[$parameterNamesStringBuffer];
         
         return dartrofit.parseAnnotation<$dataTypeFullName, $returnTypeFullName>(annotationInfo).invoke(args);
         ''';
@@ -276,7 +276,7 @@ class ClassVisitor extends SimpleElementVisitor {
           ..parameterHandlers.addAll([$parameterHandlersStringBuffer])
           ..returnType = ptv0);
         
-        final args = [$parameterNamesStringBuffer];
+        final args = <Object>[$parameterNamesStringBuffer];
         
         return dartrofit.parseAnnotation<$dataTypeFullName, $returnTypeFullName>(annotationInfo).invoke(args);
         ''';
@@ -326,7 +326,7 @@ class ClassVisitor extends SimpleElementVisitor {
           ..parameterHandlers.addAll([$parameterHandlersStringBuffer])
           ..returnType = ptv0);
         
-        final args = [$parameterNamesStringBuffer];
+        final args = <Object>[$parameterNamesStringBuffer];
         
         return dartrofit.parseAnnotation<$dataTypeFullName, $returnTypeFullName>(annotationInfo).invoke(args);
         ''';
@@ -369,7 +369,7 @@ class ClassVisitor extends SimpleElementVisitor {
           ..parameterHandlers.addAll([$parameterHandlersStringBuffer])
           ..returnType = ptv0);
           
-        final args = [$parameterNamesStringBuffer];
+        final args = <Object>[$parameterNamesStringBuffer];
         
         return dartrofit.parseAnnotation<$dataTypeFullName, $returnTypeFullName>(annotationInfo).invoke(args);
         ''';
@@ -412,7 +412,7 @@ class ClassVisitor extends SimpleElementVisitor {
           ..parameterHandlers.addAll([$parameterHandlersStringBuffer])
           ..returnType = ptv0);
         
-        final args = [$parameterNamesStringBuffer];
+        final args = <Object>[$parameterNamesStringBuffer];
         
         return dartrofit.parseAnnotation<$dataTypeFullName, $returnTypeFullName>(annotationInfo).invoke(args);
         ''';
@@ -455,7 +455,7 @@ class ClassVisitor extends SimpleElementVisitor {
           ..parameterHandlers.addAll([$parameterHandlersStringBuffer])
           ..returnType = ptv0);
         
-        final args = [$parameterNamesStringBuffer];
+        final args = <Object>[$parameterNamesStringBuffer];
         
         return dartrofit.parseAnnotation<$dataTypeFullName, $returnTypeFullName>(annotationInfo).invoke(args);
         ''';

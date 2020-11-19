@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:dartrofit/dartrofit.dart';
 import 'package:quiver/core.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:xml/xml.dart' as xml;
+import 'package:xml/xml.dart';
 import 'http.dart';
 
 part 'XmlConverterSample.g.dart';
@@ -15,30 +15,19 @@ abstract class Api {
   factory Api(Dartrofit dartrofit) = _$Api;
 
   @POST('books/v1/postXml')
-  Future<Optional<ResponseBody>> postXml1(@Body() xml.XmlNode body);
+  Future<Optional<ResponseBody>> postXml1(@Body() XmlNode body);
+
+  @POST('books/v1/postInvalidXml')
+  Future<Optional<XmlDocument>> postXml2(@Body() XmlNode body);
 
   @POST('books/v1/postXml')
-  Future<Optional<xml.XmlDocument>> postXml2(@Body() xml.XmlNode body);
-
-  @POST('books/v1/postXml')
-  Future<xml.XmlDocument> postXml3(@Body() xml.XmlNode body);
-}
-
-class User {
-  final int id;
-  final String name;
-
-  const User(this.id, this.name);
-
-  String toJson() {
-    return json.encode({'id': id, 'name': name});
-  }
+  Future<XmlDocument> postXml3(@Body() XmlNode body);
 }
 
 void main() async {
   final api = Api(dartrofit);
 
-  final builder = xml.XmlBuilder();
+  final builder = XmlBuilder();
   builder.processing('xml', 'version="1.0"');
   builder.element('bookshelf', nest: () {
     builder.element('book', nest: () {
@@ -57,11 +46,11 @@ void main() async {
     });
     builder.element('price', nest: 132.00);
   });
-  final bookshelfXml = builder.build();
+  final bookshelfXml = builder.buildDocument();
 
-  var opt = await api.postXml1(bookshelfXml);
+  final optional = await api.postXml2(bookshelfXml);
+  optional.transformNullable((value) => value.toXmlString()).ifPresent(print);
 
-  opt.ifPresent((body) {
-    print(body.string);
-  });
+  final xmlDocument = await api.postXml3(bookshelfXml);
+  print(xmlDocument.toXmlString());
 }

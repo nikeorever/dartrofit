@@ -9,9 +9,7 @@ part of 'api.dart';
 class _$Api extends Api {
   _$Api._(this.dartrofit) : super._();
 
-  factory _$Api(Dartrofit dartrofit) {
-    return _instance ??= _$Api._(dartrofit);
-  }
+  factory _$Api(Dartrofit dartrofit) => _instance ??= _$Api._(dartrofit);
 
   static _$Api _instance;
 
@@ -21,7 +19,7 @@ class _$Api extends Api {
   Future<xml.XmlDocument> getBookshelf() {
     final ptv0 =
         ParameterizedTypeValue('dart.async', 'Future', 'Future<XmlDocument>');
-    final tv1 = TypeValue('xml.nodes.document', 'XmlDocument', 'XmlDocument');
+    final tv1 = TypeValue('xml', 'XmlDocument', 'XmlDocument');
     ptv0.upperBoundAtIndex0 = tv1;
 
     final annotationInfo = AnnotationInfo((b) => b
@@ -32,7 +30,7 @@ class _$Api extends Api {
       ..parameterHandlers.addAll([])
       ..returnType = ptv0);
 
-    final args = [];
+    final args = <Object>[];
 
     return dartrofit
         .parseAnnotation<xml.XmlDocument, Future<xml.XmlDocument>>(
@@ -41,29 +39,55 @@ class _$Api extends Api {
   }
 
   @override
-  Future<Response<xml.XmlDocument>> postBookshelf(xml.XmlNode node) {
+  Future<xml.XmlDocument> getInvalidBookshelf() {
+    final ptv0 =
+        ParameterizedTypeValue('dart.async', 'Future', 'Future<XmlDocument>');
+    final tv1 = TypeValue('xml', 'XmlDocument', 'XmlDocument');
+    ptv0.upperBoundAtIndex0 = tv1;
+
+    final annotationInfo = AnnotationInfo((b) => b
+      ..httpMethod = 'GET'
+      ..relativeUrl = 'invalidBookshelf'
+      ..isMultipart = false
+      ..isFormEncoded = false
+      ..parameterHandlers.addAll([])
+      ..returnType = ptv0);
+
+    final args = <Object>[];
+
+    return dartrofit
+        .parseAnnotation<xml.XmlDocument, Future<xml.XmlDocument>>(
+            annotationInfo)
+        .invoke(args);
+  }
+
+  @override
+  Future<Response<Map<String, Object>>> postBookshelf(xml.XmlNode node) {
     final ptv0 = ParameterizedTypeValue(
-        'dart.async', 'Future', 'Future<Response<XmlDocument>>');
+        'dart.async', 'Future', 'Future<Response<Map<String, Object>>>');
     final ptv1 = ParameterizedTypeValue(
-        'dartrofit', 'Response', 'Response<XmlDocument>');
+        'dartrofit', 'Response', 'Response<Map<String, Object>>');
     ptv0.upperBoundAtIndex0 = ptv1;
-    final tv2 = TypeValue('xml.nodes.document', 'XmlDocument', 'XmlDocument');
-    ptv1.upperBoundAtIndex0 = tv2;
+    final ptv2 =
+        ParameterizedTypeValue('dart.core', 'Map', 'Map<String, Object>');
+    ptv1.upperBoundAtIndex0 = ptv2;
+    final tv3 = TypeValue('dart.core', 'String', 'String');
+    ptv2.upperBoundAtIndex0 = tv3;
 
     final annotationInfo = AnnotationInfo((b) => b
       ..httpMethod = 'POST'
-      ..relativeUrl = 'bookshelf'
+      ..relativeUrl = 'postBookshelf'
       ..isMultipart = false
       ..isFormEncoded = false
       ..parameterHandlers
           .addAll([BodyHandler(dartrofit.requestBodyConverter(node))])
       ..returnType = ptv0);
 
-    final args = [node];
+    final args = <Object>[node];
 
     return dartrofit
-        .parseAnnotation<xml.XmlDocument, Future<Response<xml.XmlDocument>>>(
-            annotationInfo)
+        .parseAnnotation<Map<String, Object>,
+            Future<Response<Map<String, Object>>>>(annotationInfo)
         .invoke(args);
   }
 }

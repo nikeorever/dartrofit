@@ -83,10 +83,8 @@ class _HttpCall<T> implements Call<T> {
       return Response.success(null, rawResponse);
     }
 
-    return runCatching<Response<T>>(() {
-      final body = responseConverter.convert(rawBody);
-      return Response.success(body, rawResponse);
-    }).getOrThrow();
+    final body = responseConverter.convert(rawBody);
+    return Response.success(body, rawResponse);
   }
 
   @override

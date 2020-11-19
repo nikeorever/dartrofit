@@ -288,7 +288,8 @@ abstract class WebApiSourceClass
           ..requiredParameters.add(Parameter((b) => b
             ..type = refer('Dartrofit')
             ..name = 'dartrofit'))
-          ..body = Code('return _instance ??= $implClassName._(dartrofit);')
+          ..body = Code('_instance ??= $implClassName._(dartrofit)')
+          ..lambda = true
           ..factory = true),
       ])
       ..methods.addAll(_overrideMethodsOf(element)));
