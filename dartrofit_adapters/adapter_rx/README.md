@@ -4,7 +4,7 @@
 
 An Adapter for adapting [rxdart](https://pub.dev/packages/rxdart) types.
 Available types:
-* Subject<T>, and Subject<Response<T>> where T is the body type.
+* `Subject<T>`, and `Subject<Response<T>>` where T is the body type.
 
 ## Download
 
