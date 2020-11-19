@@ -1,13 +1,13 @@
 import 'package:dartrofit/dartrofit.dart';
 import 'package:xml/xml.dart' as xml;
 
-part 'api.g.dart';
+part 'my_service.g.dart';
 
 @WebApi()
-abstract class Api {
-  Api._();
+abstract class MyService {
+  MyService._();
 
-  factory Api(Dartrofit dartrofit) = _$Api;
+  factory MyService(Dartrofit dartrofit) = _$MyService;
 
   @GET('bookshelf')
   Future<xml.XmlDocument> getBookshelf();

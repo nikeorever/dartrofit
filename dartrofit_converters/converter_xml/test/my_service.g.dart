@@ -1,17 +1,18 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'api.dart';
+part of 'my_service.dart';
 
 // **************************************************************************
 // WebApiGenerator
 // **************************************************************************
 
-class _$Api extends Api {
-  _$Api._(this.dartrofit) : super._();
+class _$MyService extends MyService {
+  _$MyService._(this.dartrofit) : super._();
 
-  factory _$Api(Dartrofit dartrofit) => _instance ??= _$Api._(dartrofit);
+  factory _$MyService(Dartrofit dartrofit) =>
+      _instance ??= _$MyService._(dartrofit);
 
-  static _$Api _instance;
+  static _$MyService _instance;
 
   final Dartrofit dartrofit;
 

@@ -7,16 +7,16 @@ import 'package:dartrofit/dartrofit.dart';
 import 'package:mockserver/mockserver.dart';
 import 'package:xml/xml.dart';
 
-import 'api.dart';
+import 'my_service.dart';
 
 void main() {
   group('Test_XmlConverterFactory', () {
-    Api api;
+    MyService myService;
     HttpMockServer mockServer;
 
     setUp(() {
       mockServer = HttpMockServer();
-      api = Api(Dartrofit(mockServer.url('api/'))
+      myService = MyService(Dartrofit(mockServer.url('api/'))
         ..addConverterFactory(XmlConverterFactory()));
     });
 
@@ -25,7 +25,7 @@ void main() {
           HttpMockServer.serveRequestByVirtualDirectory(request,
               pathPrefix: 'test'));
 
-      final bookshelf = await api.getBookshelf();
+      final bookshelf = await myService.getBookshelf();
       expect(bookshelf.rootElement.name.toString(), equals('bookshelf'));
       await server.close(force: true);
     });
@@ -36,7 +36,7 @@ void main() {
               pathPrefix: 'test'));
 
       try {
-        await api.getInvalidBookshelf();
+        await myService.getInvalidBookshelf();
       } catch (e) {
         expect(e, isA<XmlParserException>());
       } finally {
@@ -87,7 +87,7 @@ void main() {
       });
       final bookshelfXml = builder.buildDocument();
 
-      final response = await api.postBookshelf(bookshelfXml);
+      final response = await myService.postBookshelf(bookshelfXml);
       expect(response.body['isSuccess'], isTrue);
       await server.close(force: true);
     });
@@ -98,7 +98,7 @@ void main() {
               pathPrefix: 'test'));
 
       try {
-        await api.postBookshelf(null);
+        await myService.postBookshelf(null);
       } catch (e) {
         expect(e, isA<ArgumentError>());
       } finally {
