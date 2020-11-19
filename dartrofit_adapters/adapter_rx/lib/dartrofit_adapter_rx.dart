@@ -1,1 +1,1 @@
-export 'src/subject_adapter_factory.dart';
+export 'src/rxdart_call_adapter_factory.dart';

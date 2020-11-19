@@ -1,31 +1,14 @@
-# Dartrofit_adapter_rx for dartrofit
+# RxDart Adapter For [Dartrofit](https://pub.dev/packages/dartrofit)
 
-[![pub package](https://img.shields.io/badge/pub-1.0.0-blueviolet.svg)](https://pub.dev/packages/dartrofit_adapter_rx)
+[![pub package](https://img.shields.io/badge/pub-1.1.0-blueviolet.svg)](https://pub.dev/packages/dartrofit_adapter_rx)
 
-The Rx support for dartrofit
+An Adapter for adapting [rxdart](https://pub.dev/packages/rxdart) types.
+Available types:
+* Subject<T>, and Subject<Response<T>> where T is the body type.
 
-First, depend on it
+## Download
+
 ```yaml
 dependencies:
-    dartrofit_adapter_rx: latest version
-```
-Then, add it to `Dartrofit` configuration
-```dart
-final dartrofit = Dartrofit(Uri.parse('http://0.0.0.0:7777/'))
-  ..adapterFactories.add(SubjectAdaptFactory());
-```
-
-## Usage
-```dart
-import 'package:rxdart/rxdart.dart' as rx;
-
-@WebApi()
-abstract class Api {
-  Api._();
-
-  factory Api(Dartrofit dartrofit) = _$Api;
-
-  @GET('books/v1/getBooks')
-  rx.Subject<Response<Map<String, dynamic>>> getBookNumber();
-}
+  dartrofit_adapter_rx: ^1.1.0
 ```

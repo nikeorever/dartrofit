@@ -1,6 +1,0 @@
-targets:
-  $default:
-    builders:
-      dartrofit_generator|web_api_builder:
-        generate_for:
-          - test/api.dart

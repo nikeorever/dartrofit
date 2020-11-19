@@ -1,22 +1,25 @@
 name: dartrofit_adapter_rx
-description: The Rx support for dartrofit
-version: 1.0.0
-homepage: https://github.com/nikeorever/dartrofit/tree/master/dartrofit_adapters/adapter_rx
+description: An Adapter for adapting rxdart types.
+version: 1.1.0
+homepage: https://github.com/nikeorever/dartrofit/tree/trunk/dartrofit_adapters/adapter_rx
 
 environment:
   sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
-  dartrofit: ^1.0.0
+  dartrofit:
+    path: ../../dartrofit
   rxdart: ^0.24.1
-  wedzera: ^0.1.0
+  wedzera: ^1.0.0
 
 dev_dependencies:
-  pedantic: ^1.9.2
-  test: ^1.15.3
   build_runner: ^1.10.1
   build_verify: ^1.1.1
-  dartrofit_generator: ^1.0.0
+  dartrofit_generator:
+    path: ../../dartrofit_generator
 
   mockserver:
     path: ../../mockserver
+
+  pedantic: ^1.9.2
+  test: ^1.15.3
