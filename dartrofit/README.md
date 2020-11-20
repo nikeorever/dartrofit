@@ -1,70 +1,74 @@
 # Dartrofit for Dart and Flutter
 
-[![pub package](https://img.shields.io/badge/pub-1.0.0-blueviolet.svg)](https://pub.dev/packages/dartrofit)
+[![pub package](https://img.shields.io/badge/pub-1.1.0-blueviolet.svg)](https://pub.dev/packages/dartrofit)
 
 ## Introduction
-`Dartrofit` turns your HTTP API into a Dart "interface"(abstract class).
+`Dartrofit` turns your HTTP API into a Dart *interface*.
 ```dart
 import 'package:dartrofit/dartrofit.dart';
 
-part 'sample.g.dart';
+part 'my_service.g.dart';
 
-@WebApi()
-abstract class Api {
-  Api._();
+@Service()
+abstract class MyService {
+  MyService._();
 
-  factory Api(Dartrofit dartrofit) = _$Api;
+  factory MyService(Dartrofit dartrofit) = _$MyService;
 
-  @GET('books/v1/getBooks')
-  Future<Response<Map<String, dynamic>>> getBooks(
-    @Query('category') int category,
-  );
+  @GET('books/v1/getBook')
+  Future<Response<ResponseBody>> getBook(@Query('category') int category);
 }
 ```
-Create a `Dartrofit` object that can be used to configure `baseUrl`, `adapters`, `converters` etc.
+Create a `Dartrofit` object that can be used to configure `baseUrl`, `AdapterFactory`s, `ConverterFactory`s.
 ```dart
 final dartrofit = Dartrofit(Uri.parse('http://0.0.0.0:7777/'))
-  ..adapterFactories.add(SubjectAdaptFactory()) // Optional
-  ..converterFactories.addAll([XmlConverterFactory(), JsonConverterFactory()]); // Optional
+  ..addCallAdapterFactory(RxDartCallAdapterFactory()) // Optional
+  ..addConverterFactory(XmlConverterFactory()); // Optional
 ```
-Use `build_runner`. The [dartrofit_generator](https://pub.dev/packages/dartrofit_generator) will generates an implementation of the `Api` class in `sample.g.dart`
+Use `build_runner`. The [dartrofit_generator](https://pub.dev/packages/dartrofit_generator) will generates an implementation of the `MyService` class in `my_service.g.dart`.
+
+For Dart:
 ```shell script
 pub run build_runner build
 ```
-in Flutter
+
+For Flutter:
 ```shell script
 flutter pub run build_runner build
 ```
+
 Send request.
 ```dart
 void main() async {
-  final api = Api(dartrofit);
-  final response = await api.getBooks( 2);
+  final myService = MyService(dartrofit);
+  final response = await myService.getBook(2);
   // response ok.
-  final qp = response.request().url.queryParameters;
-  assert(int.parse(qp['category']) == 2);
+  if (response.isSuccessful()) {
+    // handle responseBody.
+  } else {
+    // handle error.
+  }
 }
 ```
 
-## Dependencies
+## Download
 ```yaml
 dependencies:
-  dartrofit: latest version # Required
-  dartrofit_adapter_rx: latest version # Optional 
-  dartrofit_converter_xml: latest version # Optional 
-  dartrofit_converter_json: latest version # Optional 
+  dartrofit: ^1.1.0 # Required
+  dartrofit_adapter_rx: ^1.1.0 # Optional 
+  dartrofit_converter_xml: ^1.1.0 # Optional
 
 dev_dependencies:
-  dartrofit_generator: latest version # Required
-  build_runner: latest version # Required
-  build_verify: latest version # Required
+  build_runner: ^1.10.1 # Required
+  build_verify: ^1.1.1 # Required
+  dartrofit_generator: ^1.1.0 # Required
 ``` 
 
 ## Request Methods
 Every method must have an HTTP annotation that provides the request method and relative URL. 
 There are seven built-in annotations: GET, POST, PUT, PATCH, DELETE, OPTIONS and HEAD. 
 ```dart
-@GET('v1/getBooks')
+@GET('books/v1/getBook')
 ```
 
 ## Url Manipulation
@@ -72,15 +76,14 @@ A request URL can be updated dynamically using replacement blocks and parameters
 A replacement block is an alphanumeric string surrounded by { and }. 
 A corresponding parameter must be annotated with `@Path()` using the same string.
 ```dart
-@GET('books/{version}/getBooks')
-Call<Response<Map<String, dynamic>>> getBooks(@Path('version') String version); 
+@GET('books/{version}/getBook')
+Call<Response<ResponseBody>> getBook(@Path('version') String version); 
 ```
 
 ## Dynamic url
 ```dart
 @GET()
-Call<Response<Map<String, dynamic>>> getBooks(@Url() String url); 
-
+Call<Response<ResponseBody>> getBooks(@Url() String url); 
 ```
 
 ## Form encoded and multipart
@@ -102,7 +105,7 @@ Multipart requests are used when `@Multipart()` is present on the method.
 ```dart
 @Multipart()
 @POST('books/v1/postBooks')
-Future<Response<ResponseBody>> postBooksWithMultipart(
+Future<Response<ResponseBody>> postBooks(
     @PartField('name') String partFileValue,
     @PartFieldMap() Map<String, String> partFieldMap,
     @PartFileList() List<http.MultipartFile> multipartFiles,
@@ -117,40 +120,40 @@ You can set static headers for a method using `@Headers([])`, `@Header()`, `@Hea
   'User-Agent: Dartrofit-Sample-App'
 ])
 @GET('books/v1/getBooks')
-rx.Subject<Response<Map<String, dynamic>>> getBookNumber(
-    @Query('key1', encoded: true) String wrapper,
-    @QueryMap(encoded: true) Map<String, String> param,
-    @Query('key2', encoded: true) String value1,
+rx.Subject<Response<Map<String, dynamic>>> getBooks(
+    @Query('key1', encoded: true) String value1,
+    @QueryMap(encoded: true) Map<String, String> queries,
+    @Query('key2', encoded: true) String value2,
     @Header('HeaderName') String headerValue,
-    @HeaderMap() Map<String, String> headerMap);
+    @HeaderMap() Map<String, String> headers);
 ```
 
 ## Dartrofit Configuration
-### Adapters
+### Call Adapters
 - `Call` (built-in)
 ```dart
-@GET('books/v1/getBooks')
-Call<Response<Map<String, dynamic>>> getBooks(@Query('category') int category); 
+@GET('books/v1/getBook')
+Call<Response<ResponseBody>> getBook(@Query('category') int category); 
 ```
 - `Future` (built-in)
 ```dart
-@GET('books/v1/getBooks')
-Future<Response<Map<String, dynamic>>> getBooks(@Query('category') int category); 
+@GET('books/v1/getBook')
+Future<Response<ResponseBody>> getBook(@Query('category') int category); 
 ```
 - `CancelableOperation` (built-in)
 ```dart
-@GET('books/v1/getBooks')
-CancelableOperation<Response<Map<String, dynamic>>> getBooks(@Query('category') int category); 
+@GET('books/v1/getBook')
+CancelableOperation<Response<ResponseBody>> getBook(@Query('category') int category); 
 ```
 - `Stream` (built-in)
 ```dart
-@GET('books/v1/getBooks')
-Stream<ResponseBody> getBooks(@Query('category') int category); 
+@GET('books/v1/getBook')
+Stream<ResponseBody> getBook(@Query('category') int category); 
 ```
-- `Subject` ([rxdart](https://pub.dev/packages/rxdart) support, depend on `dartrofit_adapter_rx: latest version`)
+- `Subject` ([external dependency](https://pub.dev/packages/dartrofit_adapter_rx))
 ```dart
-@GET('books/v1/getBooks')
-Subject<Response<Map<String, dynamic>>> getBooks(@Query('category') int category); 
+@GET('books/v1/getBook')
+Subject<Response<ResponseBody>> getBook(@Query('category') int category); 
 ```
 
 ### Converters
@@ -161,14 +164,21 @@ its `RequestBody` type for `@Body()`.
 Future<Optional<ResponseBody>> postBooks(@Body() RequestBody body);
 ```
 Converters can be added to support other types.
-- Json: `dartrofit_converter_json: latest version`(Any type accepted by `jsonEncode()` in `json`)
+- Json: (built-in)
+
+Only supports converting `ResponseBody` into: `Map<String, Object>`, `Map<Object, Object>`, `Map<String, dynamic>`, or `List<Object>`.
+
+Any type that support conversion to `RequestBody` can be accepted by `jsonEncode()` in `json`.  
 ```dart
 @POST('books/v1/postBooks')
-Future<Optional<Map<String, dynamic>>> postBooks(@Body() Map<String, dynamic> body);
+Future<Map<String, dynamic>> postBooks(@Body() Map<String, dynamic> body);
 ```
-- Xml: `dartrofit_converter_xml: latest version`
+- Xml: ([external dependency](https://pub.dev/packages/dartrofit_converter_xml))
+
+Only supports converting `ResponseBody` into: `XmlDocument`.
+
+The type that support conversion to `RequestBody` is `XmlNode`. 
 ```dart
 @POST('books/v1/postBooks')
 Future<Optional<XmlDocument>> postBooks(@Body() xml.XmlNode body);
 ```
-
