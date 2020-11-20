@@ -1,28 +1,23 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'multipart_sample.dart';
+part of 'my_service.dart';
 
 // **************************************************************************
-// WebApiGenerator
+// ServiceGenerator
 // **************************************************************************
 
-class _$MultipartApi extends MultipartApi {
-  _$MultipartApi._(this.dartrofit) : super._();
+class _$MyService extends MyService {
+  _$MyService._(this.dartrofit) : super._();
 
-  factory _$MultipartApi(Dartrofit dartrofit) {
-    return _instance ??= _$MultipartApi._(dartrofit);
-  }
+  factory _$MyService(Dartrofit dartrofit) =>
+      _instance ??= _$MyService._(dartrofit);
 
-  static _$MultipartApi _instance;
+  static _$MyService _instance;
 
   final Dartrofit dartrofit;
 
   @override
-  Future<Response<ResponseBody>> postBooksWithMultipart(
-      String partFileValue,
-      Map<String, String> partFieldMap,
-      List<http.MultipartFile> multipartFiles,
-      http.MultipartFile multipartFile) {
+  Future<Response<ResponseBody>> uploadBook(http.MultipartFile book) {
     final ptv0 = ParameterizedTypeValue(
         'dart.async', 'Future', 'Future<Response<ResponseBody>>');
     final ptv1 = ParameterizedTypeValue(
@@ -33,18 +28,13 @@ class _$MultipartApi extends MultipartApi {
 
     final annotationInfo = AnnotationInfo((b) => b
       ..httpMethod = 'POST'
-      ..relativeUrl = 'books/v1/postBooks'
+      ..relativeUrl = 'uploadBook'
       ..isMultipart = true
       ..isFormEncoded = false
-      ..parameterHandlers.addAll([
-        PartFieldHandler('name'),
-        PartFieldMapHandler(),
-        PartFileHandler(),
-        PartFileListHandler()
-      ])
+      ..parameterHandlers.addAll([PartFileHandler()])
       ..returnType = ptv0);
 
-    final args = [partFileValue, partFieldMap, multipartFile, multipartFiles];
+    final args = <Object>[book];
 
     return dartrofit
         .parseAnnotation<ResponseBody, Future<Response<ResponseBody>>>(

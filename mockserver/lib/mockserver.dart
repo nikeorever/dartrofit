@@ -15,9 +15,13 @@ class HttpMockServer {
       r'(?=(\b|\D))(((\d{1,2})|(1\d{1,2})|(2[0-4]\d)|(25[0-5]))\.){3}((\d{1,2})|(1\d{1,2})|(2[0-4]\d)|(25[0-5]))(?=(\b|\D))';
 
   /// Starts listening for HTTP requests on the specified [address] and [port]
-  Future<HttpServer> listen(Future Function(HttpRequest) requestHandler) async {
+  Future<HttpServer> listen(Future Function(HttpRequest) requestHandler,
+      {Function onError,
+      void Function() onDone,
+      bool cancelOnError}) async {
     final server = await HttpServer.bind(address, port);
-    server.listen(requestHandler);
+    server.listen(requestHandler,
+        onError: onError, onDone: onDone, cancelOnError: cancelOnError);
     return server;
   }
 

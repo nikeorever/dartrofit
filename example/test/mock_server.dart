@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:http_server/http_server.dart';
 import 'package:logging/logging.dart';
+import 'package:mockserver/mockserver.dart';
 
 final mockServerLog = Log('Mock server');
 final staticFiles = VirtualDirectory('lib')..allowDirectoryListing = true;
@@ -14,18 +15,16 @@ void main() {
     mockServerLog.info('Oh noes! ${request.uri}');
   };
   runZoned(() {
-    HttpServer.bind('0.0.0.0', 7777).then((server) {
-      mockServerLog.info('Server running');
-
-      server.listen(_serveRequest);
-    }).catchError((e, stackTrace) {
-      mockServerLog.info('Oh noes! $e $stackTrace');
-    }, test: (error) => true);
+    HttpMockServer().listen(_serveRequest,
+        onError: (dynamic e, StackTrace stackTrace) =>
+            mockServerLog.info('Oh noes! $e $stackTrace'));
+    mockServerLog.info('Server running');
   });
 }
 
 Future _serveRequest(HttpRequest request) async {
   var requestInfo =
+      // ignore: lines_longer_than_80_chars
       'method: ${request.method}; url: ${request.uri}; headers: [${request.headers}];';
   switch (request.method.toUpperCase()) {
     case 'POST':
@@ -33,11 +32,12 @@ Future _serveRequest(HttpRequest request) async {
     case 'PATCH':
       final requestBody = await HttpBodyHandler.processRequest(request);
       requestInfo +=
-      'requestBody:[type: ${requestBody.type}, body: ${requestBody.body}];';
-      final body = requestBody.body;
+          'requestBody:[type: ${requestBody.type}, body: ${requestBody.body}];';
+      final dynamic body = requestBody.body;
       if (body is Map) {
-        for (var httpBodyFileUpload in body.values.whereType<HttpBodyFileUpload>()) {
-          final content = httpBodyFileUpload.content;
+        for (var httpBodyFileUpload
+            in body.values.whereType<HttpBodyFileUpload>()) {
+          final dynamic content = httpBodyFileUpload.content;
           if (content is Uint8List) {
             print('HttpBodyFileUpload: ${utf8.decode(content)}');
           }
@@ -53,9 +53,7 @@ class Log {
   Logger _logger;
   static Log instance;
 
-  factory Log(String name) {
-    return instance ??= Log._(name);
-  }
+  factory Log(String name) => instance ??= Log._(name);
 
   Log._(String name) {
     _logger = Logger(name)
@@ -64,6 +62,6 @@ class Log {
       });
   }
 
-  void info(message, [Object error, StackTrace stackTrace]) =>
+  void info(dynamic message, [Object error, StackTrace stackTrace]) =>
       _logger.info(message, error, stackTrace);
 }
