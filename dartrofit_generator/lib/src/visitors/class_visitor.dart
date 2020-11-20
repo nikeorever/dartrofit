@@ -4,16 +4,16 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/visitor.dart';
 import 'package:code_builder/code_builder.dart';
-import 'package:dartrofit_generator/src/dart_types.dart';
-import 'package:dartrofit_generator/src/element_annotations.dart';
-import 'package:dartrofit_generator/src/fixes.dart';
-import 'package:dartrofit_generator/src/visitors/parameter_visitor.dart';
-import 'package:quiver/check.dart';
-import 'package:quiver/strings.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:wedzera/collection.dart';
+import 'package:wedzera/core.dart';
 
-class ClassVisitor extends SimpleElementVisitor {
+import '../dart_types.dart';
+import '../element_annotations.dart';
+import '../fixes.dart';
+import 'parameter_visitor.dart';
+
+class ClassVisitor extends SimpleElementVisitor<dynamic> {
   Set<Method> methods;
   final errors = <GeneratorError>[];
 
@@ -107,7 +107,8 @@ class ClassVisitor extends SimpleElementVisitor {
       }
     } else {
       throw InvalidGenerationSourceError(
-          'The return type of the method must be a parameterized type; (${element.location})');
+          'The return type of the method must be a parameterized type; '
+          '(${element.location})');
     }
 
     final buffer = StringBuffer();
@@ -124,7 +125,7 @@ class ClassVisitor extends SimpleElementVisitor {
         ?.toListValue()
         ?.map((dartObject) => "'${dartObject.toStringValue()}'")
         ?.join(', ');
-    if (isNotEmpty(headersValueStr)) {
+    if (!headersValueStr.isNullOrEmpty()) {
       headersInfo = ParameterInfo('[$headersValueStr]', 'HeadersHandler()');
     }
 
@@ -468,13 +469,14 @@ class ClassVisitor extends SimpleElementVisitor {
       int variableSuffix, String parameterizedVariableName) {
     final libraryName = DartTypes.getLibraryName(type);
     final name = type.element.name;
-    final displayName = type.getDisplayString(withNullability: false);
+    final displayName = type.getDisplayString();
     if (DartTypes.isParameterizedType(type)) {
       final varName = 'ptv$variableSuffix';
       final code =
+          // ignore: lines_longer_than_80_chars
           "final $varName = ParameterizedTypeValue('$libraryName', '$name', '$displayName');";
       buffer.writeln(code);
-      if (isNotEmpty(parameterizedVariableName)) {
+      if (!parameterizedVariableName.isNullOrEmpty()) {
         buffer.writeln(
             '$parameterizedVariableName.upperBoundAtIndex0 = $varName;');
       }
@@ -484,9 +486,10 @@ class ClassVisitor extends SimpleElementVisitor {
     } else {
       final varName = 'tv$variableSuffix';
       final code =
+          // ignore: lines_longer_than_80_chars
           "final $varName = TypeValue('$libraryName', '$name', '$displayName');";
       buffer.writeln(code);
-      if (isNotEmpty(parameterizedVariableName)) {
+      if (!parameterizedVariableName.isNullOrEmpty()) {
         buffer.writeln(
             '$parameterizedVariableName.upperBoundAtIndex0 = $varName;');
       }
@@ -539,10 +542,10 @@ class ClassVisitor extends SimpleElementVisitor {
       List<ParameterInfo> infos,
       StringBuffer parameterHandlersStringBuffer,
       StringBuffer parameterNamesStringBuffer) {
-    checkNotNull(parameterHandlersStringBuffer,
-        message: 'parameterHandlersStringBuffer == null');
-    checkNotNull(parameterNamesStringBuffer,
-        message: 'parameterNamesStringBuffer == null');
+    requireNotNull(parameterHandlersStringBuffer,
+        lazyMessage: () => 'parameterHandlersStringBuffer == null');
+    requireNotNull(parameterNamesStringBuffer,
+        lazyMessage: () => 'parameterNamesStringBuffer == null');
     infos = infos?.where((parameterInfo) => parameterInfo != null)?.toList();
     if (!infos.isNullOrEmpty) {
       for (var info in infos) {

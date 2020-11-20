@@ -4,13 +4,14 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:code_builder/code_builder.dart';
-import 'package:dartrofit_generator/src/dart_types.dart';
-import 'package:dartrofit_generator/src/element_annotations.dart';
-import 'package:dartrofit_generator/src/fixes.dart';
-import 'package:dartrofit_generator/src/visitors/class_visitor.dart';
+import 'package:dart_style/dart_style.dart';
 import 'package:quiver/iterables.dart';
 import 'package:source_gen/source_gen.dart';
-import 'package:dart_style/dart_style.dart';
+
+import 'dart_types.dart';
+import 'element_annotations.dart';
+import 'fixes.dart';
+import 'visitors/class_visitor.dart';
 
 part 'service_source_class.g.dart';
 
@@ -41,16 +42,14 @@ abstract class ServiceSourceClass
 
   @memoized
   BuiltList<String> get genericParameters =>
-      BuiltList<String>(element.typeParameters.map((e) => e.name));
+      BuiltList<String>(element.typeParameters.map<String>((e) => e.name));
 
   @memoized
   bool get isAbstract => element.isAbstract;
 
   @memoized
-  ClassDeclaration get classDeclaration {
-    return parsedLibrary.getElementDeclaration(element).node
-        as ClassDeclaration;
-  }
+  ClassDeclaration get classDeclaration =>
+      parsedLibrary.getElementDeclaration(element).node as ClassDeclaration;
 
   @memoized
   String get source =>
@@ -90,13 +89,15 @@ abstract class ServiceSourceClass
   BuiltList<ConstructorDeclaration> get classConstructors =>
       BuiltList<ConstructorDeclaration>(element.constructors
           .where((ctr) => !ctr.isFactory && !ctr.isSynthetic)
-          .map((ctr) => parsedLibrary.getElementDeclaration(ctr).node));
+          .map<AstNode>(
+              (ctr) => parsedLibrary.getElementDeclaration(ctr).node));
 
   @memoized
   BuiltList<ConstructorDeclaration> get classFactories =>
       BuiltList<ConstructorDeclaration>(element.constructors
           .where((ctr) => ctr.isFactory)
-          .map((factory) => parsedLibrary.getElementDeclaration(factory).node));
+          .map<AstNode>(
+              (factory) => parsedLibrary.getElementDeclaration(factory).node));
 
   @memoized
   BuiltList<MethodElement> get abstractMethods => BuiltList<MethodElement>(
@@ -109,23 +110,20 @@ abstract class ServiceSourceClass
   }
 
   @memoized
-  bool get hasDartrofitImportWithShow {
-    return source.contains('$_importWithSingleQuotes show') ||
-        source.contains('$_importWithDoubleQuotes show');
-  }
+  bool get hasDartrofitImportWithShow =>
+      source.contains('$_importWithSingleQuotes show') ||
+      source.contains('$_importWithDoubleQuotes show');
 
   @memoized
-  bool get hasDartrofitImportWithAs {
-    return source.contains('$_importWithSingleQuotes as') ||
+  bool get hasDartrofitImportWithAs =>
+      source.contains('$_importWithSingleQuotes as') ||
       source.contains('$_importWithDoubleQuotes as');
-  }
 
   String get _generics =>
       genericParameters.isEmpty ? '' : '<${genericParameters.join(', ')}>';
 
-  Iterable<GeneratorError> computeErrors() {
-    return concat([_checkPart(), _checkClass(), _checkAbstractMethod()]);
-  }
+  Iterable<GeneratorError> computeErrors() =>
+      concat([_checkPart(), _checkClass(), _checkAbstractMethod()]);
 
   Iterable<GeneratorError> _checkPart() {
     if (hasPartStatement) return [];
@@ -228,6 +226,7 @@ abstract class ServiceSourceClass
           'factory $name(Dartrofit dartrofit) = $implName$_generics;';
       result.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             'Add a factory so your class can be instantiated. Example:\n\n$exampleFactory'
         ..offset = classDeclaration.rightBracket.offset
         ..length = 0

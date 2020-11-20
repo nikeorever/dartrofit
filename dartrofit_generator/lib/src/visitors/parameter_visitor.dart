@@ -5,11 +5,12 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/visitor.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dartrofit/dartrofit.dart';
-import 'package:dartrofit_generator/src/dart_types.dart';
-import 'package:dartrofit_generator/src/element_annotations.dart';
-import 'package:dartrofit_generator/src/fixes.dart';
 
-class ParameterVisitor extends SimpleElementVisitor {
+import '../dart_types.dart';
+import '../element_annotations.dart';
+import '../fixes.dart';
+
+class ParameterVisitor extends SimpleElementVisitor<dynamic> {
   final ParsedLibraryResult parsedLibrary;
   final errors = <GeneratorError>[];
 
@@ -72,9 +73,7 @@ class ParameterVisitor extends SimpleElementVisitor {
       requiredParameters.add(parameter);
     } else if (element.isOptional) {
       if (element.isOptionalNamed) {
-        final builder = parameter.toBuilder();
-        builder.named = true;
-        parameter = builder.build();
+        parameter = (parameter.toBuilder()..named = true).build();
       }
       optionalParameters.add(parameter);
     }
@@ -194,6 +193,7 @@ class ParameterVisitor extends SimpleElementVisitor {
     void addError() {
       errors.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             '@QueryMap() should be annotated to parameters of type Map<String, dynamic>; (${element.location})'
         ..offset = element.nameOffset
         ..length = element.nameLength
@@ -226,6 +226,7 @@ class ParameterVisitor extends SimpleElementVisitor {
     if (!isFormUrlEncoded) {
       errors.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             '@Field() should be used with @FormUrlEncoded(); (${element.location})'
         ..offset = element.nameOffset
         ..length = element.nameLength
@@ -235,6 +236,7 @@ class ParameterVisitor extends SimpleElementVisitor {
     if (!element.type.isDartCoreString) {
       errors.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             '@Field() should be annotated to String type parameters; (${element.location})'
         ..offset = element.nameOffset
         ..length = element.nameLength
@@ -249,6 +251,7 @@ class ParameterVisitor extends SimpleElementVisitor {
     if (!isFormUrlEncoded) {
       errors.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             '@FieldMap() should be used with @FormUrlEncoded(); (${element.location})'
         ..offset = element.nameOffset
         ..length = element.nameLength
@@ -258,6 +261,7 @@ class ParameterVisitor extends SimpleElementVisitor {
     void addError() {
       errors.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             '@FieldMap() should be annotated to parameters of type Map<String, String>; (${element.location})'
         ..offset = element.nameOffset
         ..length = element.nameLength
@@ -277,6 +281,7 @@ class ParameterVisitor extends SimpleElementVisitor {
     if (!element.type.isDartCoreString) {
       errors.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             '@Header() should be annotated to String type parameters; (${element.location})'
         ..offset = element.nameOffset
         ..length = element.nameLength
@@ -288,6 +293,7 @@ class ParameterVisitor extends SimpleElementVisitor {
     void addError() {
       errors.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             '@HeaderMap() should be annotated to parameters of type Map<String, String>; (${element.location})'
         ..offset = element.nameOffset
         ..length = element.nameLength
@@ -309,6 +315,7 @@ class ParameterVisitor extends SimpleElementVisitor {
     if (!isMultipart) {
       errors.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             '@PartField() should be used with @Multipart(); (${element.location})'
         ..offset = element.nameOffset
         ..length = element.nameLength
@@ -318,6 +325,7 @@ class ParameterVisitor extends SimpleElementVisitor {
     if (!element.type.isDartCoreString) {
       errors.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             '@PartField() should be annotated to String type parameters; (${element.location})'
         ..offset = element.nameOffset
         ..length = element.nameLength
@@ -332,6 +340,7 @@ class ParameterVisitor extends SimpleElementVisitor {
     if (!isMultipart) {
       errors.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             '@PartFieldMap() should be used with @Multipart(); (${element.location})'
         ..offset = element.nameOffset
         ..length = element.nameLength
@@ -341,6 +350,7 @@ class ParameterVisitor extends SimpleElementVisitor {
     void addError() {
       errors.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             '@PartFieldMap() should be annotated to parameters of type Map<String, String>; (${element.location})'
         ..offset = element.nameOffset
         ..length = element.nameLength
@@ -370,6 +380,7 @@ class ParameterVisitor extends SimpleElementVisitor {
     if (!isMultipart) {
       errors.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             '@PartFile() should be used with @Multipart(); (${element.location})'
         ..offset = element.nameOffset
         ..length = element.nameLength
@@ -379,6 +390,7 @@ class ParameterVisitor extends SimpleElementVisitor {
     if (!isHttpMultipartFile(element.type)) {
       errors.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             '@PartFile() should be annotated to parameters of type MultipartFile; (${element.location})'
         ..offset = element.nameOffset
         ..length = element.nameLength
@@ -393,6 +405,7 @@ class ParameterVisitor extends SimpleElementVisitor {
     if (!isMultipart) {
       errors.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             '@PartFileList() should be used with @Multipart(); (${element.location})'
         ..offset = element.nameOffset
         ..length = element.nameLength
@@ -404,6 +417,7 @@ class ParameterVisitor extends SimpleElementVisitor {
             (element.type as ParameterizedType).typeArguments[0])) {
       errors.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             '@PartFileList() should be annotated to parameters of type List<MultipartFile>; (${element.location})'
         ..offset = element.nameOffset
         ..length = element.nameLength
@@ -424,6 +438,7 @@ class ParameterVisitor extends SimpleElementVisitor {
     if (!element.type.isDartCoreString) {
       errors.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             '@Url() should be annotated to String type parameters; (${element.location})'
         ..offset = element.nameOffset
         ..length = element.nameLength
@@ -435,6 +450,7 @@ class ParameterVisitor extends SimpleElementVisitor {
     if (!element.type.isDartCoreString) {
       errors.add(GeneratorError((b) => b
         ..message =
+            // ignore: lines_longer_than_80_chars
             '@Path() should be annotated to String type parameters; (${element.location})'
         ..offset = element.nameOffset
         ..length = element.nameLength

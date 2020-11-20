@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dartrofit/dartrofit.dart';
-import 'package:quiver/strings.dart';
+import 'package:wedzera/core.dart';
 
 class DartTypes {
   /// Gets the name of a `DartType`. Supports `Function` types, which will
@@ -11,6 +11,7 @@ class DartTypes {
     } else if (dartType.isDynamic) {
       return 'dynamic';
     } else if (dartType is FunctionType) {
+      // ignore: lines_longer_than_80_chars
       return '${getName(dartType.returnType)} Function(${dartType.parameters.map((p) => getName(p.type)).join(', ')})';
     } else if (dartType is InterfaceType) {
       final typeArguments = dartType.typeArguments;
@@ -50,7 +51,7 @@ class DartTypes {
 
   static String getLibraryName(DartType type) {
     var libraryName = type?.element?.library?.name;
-    if (isEmpty(libraryName)) {
+    if (libraryName.isNullOrEmpty()) {
       final arr = type.element.source.fullName?.split('/');
       if (arr != null && arr.length >= 2) {
         libraryName = arr[1];
