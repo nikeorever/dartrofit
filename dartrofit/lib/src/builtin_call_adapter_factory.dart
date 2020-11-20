@@ -1,15 +1,17 @@
 import 'dart:async';
 
 import 'package:async/async.dart';
-import 'package:dartrofit/src/call.dart';
-import 'package:dartrofit/src/call_adapter.dart';
-import 'package:dartrofit/src/response.dart';
-import 'package:dartrofit/src/type_value.dart';
 
-class BuiltInAdapterFactory extends CallAdapterFactory {
+import 'call.dart';
+import 'call_adapter.dart';
+import 'response.dart';
+import 'type_value.dart';
+
+class BuiltInCallAdapterFactory extends CallAdapterFactory {
   @override
   CallAdapter<R, T> get<R, T>(TypeValue returnType) {
     if (returnType is ParameterizedTypeValue) {
+      // For Future<>
       if (_isDartAsyncFuture(returnType)) {
         final upperBoundAtIndex0 = returnType.upperBoundAtIndex0;
 
@@ -20,6 +22,7 @@ class BuiltInAdapterFactory extends CallAdapterFactory {
         }
       }
 
+      // For CancelableOperation<>
       if (_isAsyncCancelableOperation(returnType)) {
         final upperBoundAtIndex0 = returnType.upperBoundAtIndex0;
 
@@ -30,6 +33,7 @@ class BuiltInAdapterFactory extends CallAdapterFactory {
         }
       }
 
+      // For Call<>
       if (_isDartrofitCall(returnType)) {
         final upperBoundAtIndex0 = returnType.upperBoundAtIndex0;
         if (TypeValue.isDartrofitResponse(upperBoundAtIndex0)) {
@@ -39,6 +43,7 @@ class BuiltInAdapterFactory extends CallAdapterFactory {
         return IdentityCallAdapter<R>() as CallAdapter<R, T>;
       }
 
+      // For Stream<>
       if (_isDartAsyncStream(returnType)) {
         final upperBoundAtIndex0 = returnType.upperBoundAtIndex0;
 
@@ -52,24 +57,18 @@ class BuiltInAdapterFactory extends CallAdapterFactory {
     return null;
   }
 
-  static bool _isDartAsyncFuture(ParameterizedTypeValue returnType) {
-    return returnType.name == 'Future' &&
-        returnType.libraryName == 'dart.async';
-  }
+  static bool _isDartAsyncFuture(ParameterizedTypeValue returnType) =>
+      returnType.name == 'Future' && returnType.libraryName == 'dart.async';
 
-  static bool _isAsyncCancelableOperation(ParameterizedTypeValue returnType) {
-    return returnType.name == 'CancelableOperation' &&
-        returnType.libraryName == 'async';
-  }
+  static bool _isAsyncCancelableOperation(ParameterizedTypeValue returnType) =>
+      returnType.name == 'CancelableOperation' &&
+      returnType.libraryName == 'async';
 
-  static bool _isDartrofitCall(ParameterizedTypeValue returnType) {
-    return returnType.name == 'Call' && returnType.libraryName == 'dartrofit';
-  }
+  static bool _isDartrofitCall(ParameterizedTypeValue returnType) =>
+      returnType.name == 'Call' && returnType.libraryName == 'dartrofit';
 
-  static bool _isDartAsyncStream(ParameterizedTypeValue returnType) {
-    return returnType.name == 'Stream' &&
-        returnType.libraryName == 'dart.async';
-  }
+  static bool _isDartAsyncStream(ParameterizedTypeValue returnType) =>
+      returnType.name == 'Stream' && returnType.libraryName == 'dart.async';
 }
 
 class FutureCallAdapter<R> implements CallAdapter<R, Future<Response<R>>> {
@@ -141,9 +140,7 @@ class CancelableOperationBodyCallAdapter<R>
 
 class IdentityCallAdapter<R> implements CallAdapter<R, Call<R>> {
   @override
-  Call<R> adapt(Call<R> call) {
-    return call.clone();
-  }
+  Call<R> adapt(Call<R> call) => call.clone();
 }
 
 class StreamCallAdapter<R> implements CallAdapter<R, Stream<Response<R>>> {

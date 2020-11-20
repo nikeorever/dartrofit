@@ -1,5 +1,6 @@
-import 'package:dartrofit/src/response_body.dart';
 import 'package:http/http.dart' as http;
+
+import 'response_body.dart';
 
 class Response<T> {
   final http.Response rawResponse;
@@ -16,9 +17,7 @@ class Response<T> {
   String message() => rawResponse.reasonPhrase;
 
   /// Return true if [code] is in the range [200..300]
-  bool isSuccessful() {
-    return code() >= 200 && code() < 300;
-  }
+  bool isSuccessful() => code() >= 200 && code() < 300;
 
   http.BaseRequest request() => rawResponse.request;
 

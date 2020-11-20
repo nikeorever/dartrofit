@@ -1,4 +1,4 @@
-import 'package:dartrofit/src/request_body.dart';
+import '../request_body.dart';
 
 /// represent the body of the request. It can be a [RequestBody]
 class Body {

@@ -1,7 +1,8 @@
-import 'package:dartrofit/src/parameter_handler.dart';
-import 'package:dartrofit/src/type_value.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
+
+import 'parameter_handler.dart';
+import 'type_value.dart';
 
 part 'annotation_info.g.dart';
 

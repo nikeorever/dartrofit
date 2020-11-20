@@ -8,9 +8,8 @@ class TypeValue {
   TypeValue(this.libraryName, this.name, this.displayName);
 
   @override
-  String toString() {
-    return 'TypeValue{libraryName: $libraryName, name: $name, displayName: $displayName}';
-  }
+  String toString() => 'TypeValue{libraryName: $libraryName, name: $name,'
+      ' displayName: $displayName}';
 
   static bool isDartrofitResponse(TypeValue type) {
     requireNotNull(type, lazyMessage: () => 'typeValue is null');
@@ -45,7 +44,8 @@ class ParameterizedTypeValue extends TypeValue {
       : super(libraryName, name, displayName);
 
   @override
-  String toString() {
-    return 'ParameterizedTypeValue{libraryName: $libraryName, name: $name, displayName: $displayName}, upperBoundAtIndex0: $upperBoundAtIndex0}';
-  }
+  String toString() =>
+      'ParameterizedTypeValue{libraryName: $libraryName, name: $name,'
+      ' displayName: $displayName},'
+      ' upperBoundAtIndex0: $upperBoundAtIndex0}';
 }

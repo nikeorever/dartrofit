@@ -1,15 +1,14 @@
-import 'dart:convert';
-
-import 'package:dartrofit/dartrofit.dart';
-import 'package:dartrofit/src/annotations/field.dart';
-import 'package:dartrofit/src/annotations/header.dart';
-import 'package:dartrofit/src/annotations/multipart.dart';
-import 'package:dartrofit/src/annotations/querys.dart';
-import 'package:dartrofit/src/annotations/url.dart';
-import 'package:dartrofit/src/request_builder.dart';
 import 'package:http/http.dart';
-import 'package:quiver/strings.dart';
 import 'package:wedzera/core.dart';
+
+import 'annotations/field.dart';
+import 'annotations/header.dart';
+import 'annotations/multipart.dart';
+import 'annotations/queries.dart';
+import 'annotations/url.dart';
+import 'converter.dart';
+import 'request_body.dart';
+import 'request_builder.dart';
 
 abstract class ParameterHandler<T> {
   void apply(RequestBuilder builder, T value);
@@ -23,7 +22,7 @@ class QueryHandler extends ParameterHandler<dynamic> {
   QueryHandler(this.name, this.encoded) : assert(name != null);
 
   @override
-  void apply(RequestBuilder builder, value) {
+  void apply(RequestBuilder builder, dynamic value) {
     if (value == null) return; // skip null value
     builder.addQueryParam(name, value.toString(), encoded);
   }
@@ -39,10 +38,10 @@ class QueryMapHandler extends ParameterHandler<Map<String, dynamic>> {
   void apply(RequestBuilder builder, Map<String, dynamic> value) {
     requireNotNull(value, lazyMessage: () => 'Query map was null');
 
-    value.forEach((entryKey, entryValue) {
-      requireNotNull(entryKey,
+    value.forEach((String entryKey, dynamic entryValue) {
+      requireNotNull<String>(entryKey,
           lazyMessage: () => 'Query map contained null key');
-      requireNotNull(entryValue,
+      requireNotNull<dynamic>(entryValue,
           lazyMessage: () =>
               "Query map contained null value for key '$entryKey'");
 
@@ -74,7 +73,6 @@ class PathHandler extends ParameterHandler<Object> {
   }
 }
 
-/// [Body]
 class BodyHandler extends ParameterHandler<Object> {
   final Converter<Object, RequestBody> converter;
 
@@ -85,9 +83,8 @@ class BodyHandler extends ParameterHandler<Object> {
     requireNotNull(value,
         lazyMessage: () => 'Body parameter value must not be null.');
 
-    builder.body = runCatching<RequestBody>(() {
-      return converter.convert(value);
-    }).getOrElse((e) {
+    builder.body =
+        runCatching<RequestBody>(() => converter.convert(value)).getOrElse((e) {
       throw ArgumentError('Unable to convert $value to RequestBody');
     });
   }
@@ -101,7 +98,7 @@ class FieldHandler extends ParameterHandler<dynamic> {
   FieldHandler(this.name, this.encoded) : assert(name != null);
 
   @override
-  void apply(RequestBuilder builder, value) {
+  void apply(RequestBuilder builder, dynamic value) {
     if (value == null) return;
     builder.addFormField(name, value.toString(), encoded);
   }
@@ -116,9 +113,10 @@ class FieldMapHandler extends ParameterHandler<Map<String, dynamic>> {
   @override
   void apply(RequestBuilder builder, Map<String, dynamic> value) {
     requireNotNull(value, lazyMessage: () => 'Field map was null.');
-    value.forEach((key, value) {
-      requireNotNull(key, lazyMessage: () => 'Field map contained null key.');
-      requireNotNull(value,
+    value.forEach((String key, dynamic value) {
+      requireNotNull<String>(key,
+          lazyMessage: () => 'Field map contained null key.');
+      requireNotNull<dynamic>(value,
           lazyMessage: () => 'Field map contained null value for key $key.');
       builder.addFormField(key, value.toString(), encoded);
     });
@@ -136,7 +134,7 @@ class HeadersHandler extends ParameterHandler<List<String>> {
         final split = str.split(':');
         final name = split[0].trim();
         final value = split[1].trim();
-        if (isNotEmpty(name) && isNotEmpty(value)) {
+        if (!name.isNullOrEmpty() && !value.isNullOrEmpty()) {
           builder.headers[name] = value;
         }
       }
@@ -151,7 +149,7 @@ class HeaderHandler extends ParameterHandler<dynamic> {
   HeaderHandler(this.name) : assert(name != null);
 
   @override
-  void apply(RequestBuilder builder, value) {
+  void apply(RequestBuilder builder, dynamic value) {
     if (value == null) return;
     builder.headers[name] = value.toString();
   }
@@ -160,7 +158,7 @@ class HeaderHandler extends ParameterHandler<dynamic> {
 /// [HeaderMap]
 class HeaderMapHandler extends ParameterHandler<dynamic> {
   @override
-  void apply(RequestBuilder builder, value) {
+  void apply(RequestBuilder builder, dynamic value) {
     if (value == null) return;
     if (value is Map) {
       final casted = value.cast<String, String>();
@@ -176,7 +174,7 @@ class PartFieldHandler extends ParameterHandler<dynamic> {
   PartFieldHandler(this.name) : assert(name != null);
 
   @override
-  void apply(RequestBuilder builder, value) {
+  void apply(RequestBuilder builder, dynamic value) {
     if (value == null) return;
     builder.multipartFields[name] = value.toString();
   }
@@ -185,7 +183,7 @@ class PartFieldHandler extends ParameterHandler<dynamic> {
 /// [PartFieldMap]
 class PartFieldMapHandler extends ParameterHandler<dynamic> {
   @override
-  void apply(RequestBuilder builder, value) {
+  void apply(RequestBuilder builder, dynamic value) {
     if (value == null) return;
     if (value is Map) {
       final casted = value.cast<String, String>();
@@ -199,7 +197,7 @@ class PartFieldMapHandler extends ParameterHandler<dynamic> {
 /// [PartFile]
 class PartFileHandler extends ParameterHandler<dynamic> {
   @override
-  void apply(RequestBuilder builder, value) {
+  void apply(RequestBuilder builder, dynamic value) {
     if (value == null) return;
     if (value is MultipartFile) {
       builder.multipartFiles.add(value);
@@ -210,7 +208,7 @@ class PartFileHandler extends ParameterHandler<dynamic> {
 /// [PartFileList]
 class PartFileListHandler extends ParameterHandler<dynamic> {
   @override
-  void apply(RequestBuilder builder, value) {
+  void apply(RequestBuilder builder, dynamic value) {
     if (value == null) return;
     if (value is Iterable) {
       final casted = value.cast<MultipartFile>();

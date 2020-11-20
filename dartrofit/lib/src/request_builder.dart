@@ -1,27 +1,29 @@
 import 'dart:collection';
 import 'dart:convert';
 
-import 'package:dartrofit/dartrofit.dart';
-import 'package:dartrofit/src/request_body.dart';
 import 'package:http/http.dart';
-import 'package:quiver/check.dart';
 import 'package:quiver/core.dart';
-import 'package:quiver/strings.dart';
 import 'package:wedzera/collection.dart';
+import 'package:wedzera/core.dart';
+
+import 'request_body.dart';
 
 class RequestBuilder {
   /// This doc comments is copied from Retrofit
-  /// Matches strings that contain {@code .} or {@code ..} as a complete path segment. This also
-  /// matches dots in their percent-encoded form, {@code %2E}.
+  /// Matches strings that contain {@code .} or {@code ..} as a complete path
+  /// segment. This also matches dots in their percent-encoded form,
+  /// {@code %2E}.
   ///
-  /// <p>It is okay to have these strings within a larger path segment (like {@code a..z} or {@code
-  /// index.html}) but when alone they have a special meaning. A single dot resolves to no path
-  /// segment so {@code /one/./three/} becomes {@code /one/three/}. A double-dot pops the preceding
-  /// directory, so {@code /one/../three/} becomes {@code /three/}.
+  /// <p>It is okay to have these strings within a larger path segment
+  /// (like {@code a..z} or {@code index.html}) but when alone they have a
+  /// special meaning. A single dot resolves to no path segment so
+  /// {@code /one/./three/} becomes {@code /one/three/}. A double-dot pops
+  /// the preceding directory, so {@code /one/../three/} becomes {@code /three/}.
   ///
-  /// <p>We forbid these in Dartrofit paths because they're likely to have the unintended effect.
-  /// For example, passing {@code ..} to {@code DELETE /account/book/{isbn}/} yields {@code DELETE
-  /// /account/}.
+  /// <p>We forbid these in Dartrofit paths because they're likely to have the
+  /// unintended effect.
+  /// For example, passing {@code ..} to {@code DELETE /account/book/{isbn}/}
+  /// yields {@code DELETE /account/}.
   static final RegExp _pathTraversal = RegExp('(.*/)?(\.|%2e|%2E){1,2}(/.*)?');
 
   final String method;
@@ -56,14 +58,16 @@ class RequestBuilder {
   }
 
   void addPathParam(String name, String value, bool encoded) {
-    checkNotNull(relativeUrl, message: 'relativeUrl is null.');
+    requireNotNull(relativeUrl, lazyMessage: () => 'relativeUrl is null.');
 
     final replacement = encoded ? Uri.encodeComponent(value) : value;
     final newRelativeUrl = relativeUrl.replaceAll('{$name}', replacement);
     final matches = _pathTraversal.allMatches(newRelativeUrl);
-    if (matches != null && matches.isNotEmpty && !matches.all((match) => match.group(0) == '.')) {
-      throw ArgumentError(
-          "@Path parameters shouldn't perform path traversal ('.' or '..'): $value");
+    if (matches != null &&
+        matches.isNotEmpty &&
+        !matches.all((match) => match.group(0) == '.')) {
+      throw ArgumentError("@Path parameters shouldn't perform path"
+          " traversal ('.' or '..'): $value");
     }
     relativeUrl = newRelativeUrl;
   }
@@ -71,13 +75,14 @@ class RequestBuilder {
   void addQueryParam(String name, String value, bool encoded) {
     if (relativeUrl != null) {
       // Do a one-time combination of the built relative URL and the base URL.
-      uri = checkNotNull<Uri>(baseUrl.resolve(relativeUrl),
-          message: 'Malformed URL. Base: $baseUrl, Relative: $relativeUrl');
+      uri = requireNotNull<Uri>(baseUrl.resolve(relativeUrl),
+          lazyMessage: () =>
+              'Malformed URL. Base: $baseUrl, Relative: $relativeUrl');
 
       relativeUrl = null;
     }
 
-    if (isEmpty(name) || isEmpty(value)) {
+    if (name.isNullOrEmpty() || value.isNullOrEmpty()) {
       return;
     }
 
@@ -90,15 +95,15 @@ class RequestBuilder {
     uri = uri.replace(queryParameters: newQueryParameters);
   }
 
-  void addFormField(String name, String value, bool encoded) {
-    return (body as FormBody).add(name, value, encoded);
-  }
+  void addFormField(String name, String value, bool encoded) =>
+      (body as FormBody).add(name, value, encoded);
 
   /// one of [Request], [MultipartRequest]
   BaseRequest build() {
     var url = uri;
-    url ??= checkNotNull<Uri>(baseUrl.resolve(relativeUrl),
-        message: 'Malformed URL. Base: $baseUrl, Relative: $relativeUrl');
+    url ??= requireNotNull<Uri>(baseUrl.resolve(relativeUrl),
+        lazyMessage: () =>
+            'Malformed URL. Base: $baseUrl, Relative: $relativeUrl');
 
     BaseRequest baseRequest;
     if (isMultipart) {

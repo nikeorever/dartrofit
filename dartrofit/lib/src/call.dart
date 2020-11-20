@@ -1,10 +1,11 @@
-import 'package:dartrofit/src/converter.dart';
-import 'package:dartrofit/src/request_factory.dart';
-import 'package:dartrofit/src/response.dart';
-import 'package:dartrofit/src/response_body.dart';
-import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
+import 'package:http/http.dart' as http;
 import 'package:wedzera/core.dart';
+
+import 'converter.dart';
+import 'request_factory.dart';
+import 'response.dart';
+import 'response_body.dart';
 
 typedef OnResponse<T> = void Function(Call<T>, Response<T>);
 typedef OnFailure<T> = void Function(Call<T>, ErrorAndStacktrace);
@@ -91,7 +92,5 @@ class _HttpCall<T> implements Call<T> {
   bool isCanceled() => operation?.isCanceled;
 
   @override
-  Call<T> clone() {
-    return _HttpCall<T>(requestFactory, args, responseConverter);
-  }
+  Call<T> clone() => _HttpCall<T>(requestFactory, args, responseConverter);
 }

@@ -1,12 +1,17 @@
 import 'dart:convert';
 
-import 'package:dartrofit/src/call_adapter.dart';
-import 'package:dartrofit/src/converter.dart';
-import 'package:dartrofit/src/request_factory.dart';
-import 'package:dartrofit/src/response_body.dart';
-import 'package:dartrofit/src/type_value.dart';
-import 'package:dartrofit/dartrofit.dart';
-import 'package:quiver/check.dart';
+import 'package:wedzera/core.dart';
+
+import 'annotation_info.dart';
+import 'builtin_call_adapter_factory.dart';
+import 'builtin_converter_factory.dart';
+import 'call_adapter.dart';
+import 'converter.dart';
+import 'request_body.dart';
+import 'request_factory.dart';
+import 'response_body.dart';
+import 'service_methods.dart';
+import 'type_value.dart';
 
 class Dartrofit {
   final Uri baseUrl;
@@ -14,15 +19,16 @@ class Dartrofit {
     BuiltInConvertFactory() // must be last
   ];
   final List<CallAdapterFactory> _adapterFactories = <CallAdapterFactory>[
-    BuiltInAdapterFactory()
+    BuiltInCallAdapterFactory()
   ];
 
   Dartrofit(Uri baseUrl) : baseUrl = _checkBaseUrl(baseUrl);
 
   static Uri _checkBaseUrl(Uri baseUrl) {
-    checkNotNull(baseUrl, message: 'baseUrl == null');
+    requireNotNull(baseUrl, lazyMessage: () => 'baseUrl == null');
     final pathSegments = baseUrl.pathSegments;
-    if (pathSegments.isNotEmpty && '' != pathSegments[pathSegments.length - 1]) {
+    if (pathSegments.isNotEmpty &&
+        '' != pathSegments[pathSegments.length - 1]) {
       throw ArgumentError('baseUrl must end in /: $baseUrl');
     }
     return baseUrl;

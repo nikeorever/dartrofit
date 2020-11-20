@@ -1,11 +1,12 @@
 import 'dart:convert';
 
-import 'package:dartrofit/dartrofit.dart';
-import 'package:dartrofit/src/converter.dart';
-import 'package:dartrofit/src/response_body.dart';
-import 'package:dartrofit/src/type_value.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:quiver/core.dart';
+
+import 'converter.dart';
+import 'request_body.dart';
+import 'response_body.dart';
+import 'type_value.dart';
 
 class BuiltInConvertFactory extends ConverterFactory {
   @override
@@ -19,15 +20,18 @@ class BuiltInConvertFactory extends ConverterFactory {
             as Converter<ResponseBody, T>;
       }
 
-      // For Optional<Map<String, Object>>, Optional<Map<Object, Object>> or Optional<Map<String, dynamic>>
+      // For Optional<Map<String, Object>>, Optional<Map<Object, Object>>
+      // or Optional<Map<String, dynamic>>
       if (TypeValue.isDartCoreMap(innerType)) {
         try {
           return OptionalConverter<Map<String, Object>>(
               _MapResponseBodyConverter()) as Converter<ResponseBody, T>;
         } catch (e) {
           throw UnsupportedError(
-              'You might want to convert ResponseBody to Optional JSONObject, use '
-              'Optional<Map<String, Object>>, Optional<Map<Object, Object>> or Optional<Map<String, dynamic>> instead');
+              'You might want to convert ResponseBody to Optional JSONObject, '
+              'use Optional<Map<String, Object>>, '
+              'Optional<Map<Object, Object>> '
+              'or Optional<Map<String, dynamic>> instead');
         }
       }
 
@@ -36,9 +40,10 @@ class BuiltInConvertFactory extends ConverterFactory {
         try {
           return OptionalConverter<List<Object>>(_ListResponseBodyConverter())
               as Converter<ResponseBody, T>;
-        } on TypeError {
+        } catch (_) {
           throw UnsupportedError(
-              'You might want to convert ResponseBody to Optional JSONArray, use Optional<List<Object>> instead.');
+              'You might want to convert ResponseBody to Optional JSONArray, '
+              'use Optional<List<Object>> instead.');
         }
       }
     }
@@ -52,10 +57,11 @@ class BuiltInConvertFactory extends ConverterFactory {
     if (TypeValue.isDartCoreMap(dataType)) {
       try {
         return _MapResponseBodyConverter() as Converter<ResponseBody, T>;
-      } on TypeError {
+      } catch (_) {
         throw UnsupportedError(
             'You might want to convert ResponseBody to JSONObject, use '
-            'Map<String, Object>, Map<Object, Object> or Map<String, dynamic> instead');
+            'Map<String, Object>, Map<Object, Object> '
+            'or Map<String, dynamic> instead');
       }
     }
 
@@ -63,9 +69,10 @@ class BuiltInConvertFactory extends ConverterFactory {
     if (TypeValue.isDartCoreList(dataType)) {
       try {
         return _ListResponseBodyConverter() as Converter<ResponseBody, T>;
-      } on TypeError {
+      } catch (_) {
         throw UnsupportedError(
-            'You might want to convert ResponseBody to JSONArray, use List<Object> instead.');
+            'You might want to convert ResponseBody to JSONArray, '
+            'use List<Object> instead.');
       }
     }
 
@@ -90,25 +97,22 @@ class OptionalConverter<T> implements Converter<ResponseBody, Optional<T>> {
   OptionalConverter(this.delegate);
 
   @override
-  Optional<T> convert(ResponseBody value) {
-    return Optional.fromNullable(delegate.convert(value));
-  }
+  Optional<T> convert(ResponseBody value) =>
+      Optional.fromNullable(delegate.convert(value));
 }
 
 class _MapResponseBodyConverter
     implements Converter<ResponseBody, Map<String, Object>> {
   @override
-  Map<String, Object> convert(ResponseBody value) {
-    return jsonDecode(value.string) as Map<String, Object>;
-  }
+  Map<String, Object> convert(ResponseBody value) =>
+      jsonDecode(value.string) as Map<String, Object>;
 }
 
 class _ListResponseBodyConverter
     implements Converter<ResponseBody, List<Object>> {
   @override
-  List<Object> convert(ResponseBody value) {
-    return jsonDecode(value.string) as List<Object>;
-  }
+  List<Object> convert(ResponseBody value) =>
+      jsonDecode(value.string) as List<Object>;
 }
 
 class _RequestBodyConverter implements Converter<RequestBody, RequestBody> {

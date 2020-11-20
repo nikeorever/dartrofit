@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http_parser/http_parser.dart';
-import 'package:quiver/check.dart';
+import 'package:wedzera/core.dart';
 
 abstract class RequestBody {
   final MediaType contentType;
@@ -18,9 +18,8 @@ abstract class RequestBody {
 
   RequestBody._(this.contentType);
 
-  factory RequestBody.bytes(MediaType contentType, List<int> content) {
-    return _RequestBody(contentType, content);
-  }
+  factory RequestBody.bytes(MediaType contentType, List<int> content) =>
+      _RequestBody(contentType, content);
 
   factory RequestBody.string(MediaType contentType, String content) {
     contentType ??=
@@ -45,8 +44,9 @@ class _RequestBody extends RequestBody {
 
   @override
   void writeTo(Sink<List<int>> sink) {
-    sink.add(content);
-    sink.close();
+    sink
+      ..add(content)
+      ..close();
   }
 }
 
@@ -58,8 +58,8 @@ class FormBody extends RequestBody {
   FormBody() : super._(_mediaType);
 
   void add(String name, String value, bool encoded) {
-    checkNotNull(name, message: 'name == null');
-    checkNotNull(value, message: 'value == null');
+    requireNotNull(name, lazyMessage: () => 'name == null');
+    requireNotNull(value, lazyMessage: () => 'value == null');
     bodyFields.add([
       encoded ? Uri.encodeQueryComponent(name, encoding: utf8) : name,
       encoded ? Uri.encodeQueryComponent(value, encoding: utf8) : value
@@ -69,7 +69,8 @@ class FormBody extends RequestBody {
   @override
   void writeTo(Sink<List<int>> sink) {
     final body = bodyFields.map((pair) => '${pair[0]}=${pair[1]}').join('&');
-    sink.add(RequestBody.getEncoding(contentType).encode(body));
-    sink.close();
+    sink
+      ..add(RequestBody.getEncoding(contentType).encode(body))
+      ..close();
   }
 }

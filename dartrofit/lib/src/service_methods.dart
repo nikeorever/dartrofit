@@ -1,9 +1,8 @@
-import 'package:dartrofit/dartrofit.dart';
-import 'package:dartrofit/src/call.dart';
-import 'package:dartrofit/src/call_adapter.dart';
-import 'package:dartrofit/src/converter.dart';
-import 'package:dartrofit/src/request_factory.dart';
-import 'package:dartrofit/src/response_body.dart';
+import 'call.dart';
+import 'call_adapter.dart';
+import 'converter.dart';
+import 'request_factory.dart';
+import 'response_body.dart';
 
 abstract class HttpServiceMethod<ResponseT, ReturnT> {
   final RequestFactory requestFactory;
@@ -30,5 +29,3 @@ class CallAdapted<ResponseT, ReturnT>
   @override
   ReturnT adapt(Call<ResponseT> future) => adapter.adapt(future);
 }
-
-

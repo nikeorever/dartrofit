@@ -1,6 +1,5 @@
-import 'package:dartrofit/src/type_value.dart';
-
 import 'call.dart';
+import 'type_value.dart';
 
 abstract class CallAdapter<R, T> {
   T adapt(Call<R> call);

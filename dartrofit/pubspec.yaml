@@ -1,24 +1,29 @@
 name: dartrofit
-description: A Retrofit-Like http client for Dart and Flutter
-version: 1.0.0
-homepage: https://github.com/nikeorever/dartrofit/tree/master/dartrofit
+description: A retrofit-like http client for Dart and Flutter.
+version: 1.1.0
+homepage: https://github.com/nikeorever/dartrofit/tree/trunk/dartrofit
 
 environment:
   sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
   analyzer: ^0.39.14
+
   async: ^2.4.2
+
   built_collection: ^4.3.2
   built_value: ^7.1.0
+
   http: ^0.12.2
   http_parser: ^3.1.4
+
   quiver: ^2.1.3
   wedzera: ^1.0.0
 
 dev_dependencies:
-  built_value_generator: ^7.1.0
   build_runner: ^1.10.1
   build_verify: ^1.1.1
+  built_value_generator: ^7.1.0
+
   pedantic: ^1.9.2
   test: ^1.15.3

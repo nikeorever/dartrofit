@@ -1,6 +1,9 @@
-import 'package:dartrofit/src/parameter_handler.dart';
-import 'package:dartrofit/src/request_builder.dart';
 import 'package:http/http.dart';
+import 'package:wedzera/core.dart';
+import 'package:wedzera/collection.dart';
+
+import 'parameter_handler.dart';
+import 'request_builder.dart';
 
 class RequestFactory {
   final String method;
@@ -17,16 +20,17 @@ class RequestFactory {
   BaseRequest create(List<Object> args) {
     final handlers = parameterHandlers;
     final argumentCount = args.length;
-    if (argumentCount != handlers.length) {
-      throw ArgumentError(
-          "Argument count ($argumentCount) doesn't match expected count (${handlers.length})");
-    }
+    require(argumentCount == handlers.length,
+        lazyMessage: () =>
+            "Argument count ($argumentCount) doesn't match expected"
+            ' count (${handlers.length})');
+
     final requestBuilder = RequestBuilder(
         method, baseUrl, relativeUrl, isMultipart, isFormEncoded);
 
-    for (var p = 0; p < argumentCount; p++) {
-      handlers[p].apply(requestBuilder, args[p]);
-    }
+    handlers.forEachIndexed((index, handler) {
+      handler.apply(requestBuilder, args[index]);
+    });
 
     return requestBuilder.build();
   }
