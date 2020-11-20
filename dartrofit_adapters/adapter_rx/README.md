@@ -4,7 +4,28 @@
 
 An Adapter for adapting [rxdart](https://pub.dev/packages/rxdart) types.
 Available types:
-* `Subject<T>`, and `Subject<Response<T>>` where T is the body type.
+* The `Subject<T>` and `Subject<Response<T>>` where T is the body type.
+
+## Example
+```dart
+import 'package:dartrofit/dartrofit.dart';
+import 'package:rxdart/rxdart.dart' as rx;
+
+part 'my_service.g.dart';
+
+@Service()
+abstract class MyService {
+  MyService._();
+
+  factory MyService(Dartrofit dartrofit) = _$MyService;
+
+  @GET('book')
+  rx.Subject<Response<ResponseBody>> getBook1(@Query('id') String id);
+
+  @GET('book')
+  rx.Subject<ResponseBody> getBook2(@Query('id') String id);
+}
+```
 
 ## Download
 
