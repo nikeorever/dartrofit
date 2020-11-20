@@ -7,8 +7,7 @@ environment:
   sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
-  dartrofit:
-    path: ../../dartrofit
+  dartrofit: ^1.1.0
   http_parser: ^3.1.4
   xml: ^4.5.1
 
@@ -18,6 +17,7 @@ dev_dependencies:
   dartrofit_generator:
     path: ../../dartrofit_generator
 
+  http_server: ^0.9.8+3
   mockserver:
     path: ../../mockserver
 

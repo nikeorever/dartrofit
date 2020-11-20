@@ -7,8 +7,7 @@ environment:
   sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
-  dartrofit:
-    path: ../../dartrofit
+  dartrofit: ^1.1.0
   rxdart: ^0.24.1
   wedzera: ^1.0.0
 

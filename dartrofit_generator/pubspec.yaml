@@ -15,8 +15,7 @@ dependencies:
 
   code_builder: ^3.5.0
   dart_style: ^1.3.6
-  dartrofit:
-    path: ../dartrofit
+  dartrofit: ^1.1.0
   quiver: ^2.1.3
   source_gen: ^0.9.6
   wedzera: ^1.0.0
